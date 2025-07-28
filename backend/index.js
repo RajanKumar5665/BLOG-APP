@@ -13,17 +13,27 @@ const app = express();
 const port = process.env.PORT || 5000;
 const MONGODB_URI = process.env.MONGODB_URI;
 
-// Middleware
-app.use(express.json());
-app.use(cookieParser());
+// ✅ Load frontend URLs from .env
+const allowedOrigins = process.env.FRONTEND_URLS.split(",");
+
+// ✅ CORS Middleware
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS not allowed from this origin: " + origin));
+      }
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
   })
 );
 
+// Middleware
+app.use(express.json());
+app.use(cookieParser());
 app.use(
   fileUpload({
     useTempFiles: true,
@@ -38,15 +48,27 @@ cloudinary.config({
   api_secret: process.env.CLOUD_SECRET_KEY,
 });
 
+// ✅ Root route
+app.get("/", (req, res) => {
+  res.send("🚀 Blog API is running");
+});
+
 // Routes
 app.use("/api/users", userRoute);
 app.use("/api/blogs", blogRoute);
 
-// Connect DB
+// ✅ Global error handler
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ success: false, message: err.message || "Server Error" });
+});
+
+// Connect to DB and start server
 async function connectDB() {
   try {
     await mongoose.connect(MONGODB_URI);
     console.log("✅ Connected to MongoDB");
+
     app.listen(port, () => {
       console.log(`🚀 Server running on port ${port}`);
     });

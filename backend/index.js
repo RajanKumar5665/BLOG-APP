@@ -14,7 +14,9 @@ const port = process.env.PORT || 5000;
 const MONGODB_URI = process.env.MONGODB_URI;
 
 // ✅ Load frontend URLs from .env
-const allowedOrigins = process.env.FRONTEND_URLS.split(",");
+// ✅ Load frontend URLs from .env safely
+const allowedOrigins = (process.env.FRONTEND_URLS || "").split(",");
+
 
 // ✅ CORS Middleware
 app.use(

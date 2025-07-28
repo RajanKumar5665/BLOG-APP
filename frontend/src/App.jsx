@@ -15,26 +15,26 @@ import { Toaster } from "react-hot-toast";
 import UpdateBlog from "./dashboard/UpdateBlog";
 import Detail from "./pages/Detail";
 import NotFound from "./pages/NotFound";
+import { BACKEND_URL } from './utils.js'; // Keep this if you plan to use it
+
 function App() {
   const location = useLocation();
-  const hideNavbarFooter = ["/dashboard", "/login", "/register"].includes(
-    location.pathname
-  );
+  const hideNavbarFooter = ["/dashboard", "/login", "/register"].includes(location.pathname);
   const { blogs, isAuthenticated } = useAuth();
-  let token = localStorage.getItem("jwt"); // Retrieve the token directly from the localStorage to maininting the routes protect (Go to login.jsx)
-  console.log(blogs);
-  console.log(isAuthenticated); // it is not using because every page refresh it was redirected to /login
+  let token = localStorage.getItem("jwt");
 
-  <Toaster position="top-center" reverseOrder={false} />
+  console.log(blogs);
+  console.log(isAuthenticated);
 
   return (
     <div>
+      <Toaster position="top-center" reverseOrder={false} />
       {!hideNavbarFooter && <Navbar />}
       <Routes>
         <Route
           exact
           path="/"
-          element={token ? <Home /> : <Navigate to={"/login"} />}
+          element={token ? <Home /> : <Navigate to="/login" />}
         />
         <Route exact path="/blogs" element={<Blogs />} />
         <Route exact path="/about" element={<About />} />
@@ -44,16 +44,15 @@ function App() {
         <Route exact path="/register" element={<Register />} />
         <Route exact path="/dashboard" element={<Dashboard />} />
 
-        {/* Single page route */}
+        {/* Blog Detail Page */}
         <Route exact path="/blog/:id" element={<Detail />} />
 
-        {/* Update page route */}
+        {/* Update Blog Page */}
         <Route exact path="/blog/update/:id" element={<UpdateBlog />} />
 
-        {/* Universal route */}
+        {/* Not Found */}
         <Route path="*" element={<NotFound />} />
       </Routes>
-      <Toaster />
       {!hideNavbarFooter && <Footer />}
     </div>
   );

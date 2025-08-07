@@ -7,12 +7,12 @@ export const AuthProvider = ({ children }) => {
   const [blogs, setBlogs] = useState();
   const [profile, setProfile] = useState();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true); // ✅ Added loading state
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        // token should be let type variable because its value will change in every login. (in backend also)
-        let token = localStorage.getItem("jwt"); // Retrieve the token directly from the localStorage (Go to login.jsx)
+        let token = localStorage.getItem("jwt");
         console.log(token);
         if (token) {
           const { data } = await axios.get(
@@ -30,6 +30,8 @@ export const AuthProvider = ({ children }) => {
         }
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false); // ✅ Stop loading after fetch (success or error)
       }
     };
 
@@ -58,6 +60,7 @@ export const AuthProvider = ({ children }) => {
         setProfile,
         isAuthenticated,
         setIsAuthenticated,
+        loading, // ✅ Provide loading
       }}
     >
       {children}

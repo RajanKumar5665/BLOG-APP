@@ -2,32 +2,36 @@ import React from "react";
 import { useAuth } from "../context/AuthProvider";
 
 function About() {
-  const { profile } = useAuth();
+  const { profile, loading } = useAuth(); // ✅ get loading
 
-  if (!profile?.user) {
+  if (loading) {
     return <p className="text-center mt-10 text-lg font-medium">Loading profile...</p>;
+  }
+
+  if (!profile) {
+    return <p className="text-center mt-10 text-lg font-medium text-red-500">User not found!</p>;
   }
 
   return (
     <div className="container mx-auto my-12 p-4 space-y-9">
       <div className="flex flex-col items-center mb-6">
         <img
-          src={profile?.user?.photo?.url}
-          alt={profile?.user?.name}
+          src={profile?.photo?.url}
+          alt={profile?.name}
           className="w-32 h-32 rounded-full border-4 border-blue-500 shadow-md"
         />
         <h1 className="text-3xl font-bold mt-4">About</h1>
-        <p className="text-gray-600 mt-2">Hi, I am {profile?.user?.name}</p>
+        <p className="text-gray-600 mt-2">Hi, I am {profile?.name}</p>
       </div>
 
       <p>
         This is{" "}
         <strong className="text-blue-800 font-semibold hover:scale-105 duration-500">
-          {profile?.user?.name}
+          {profile?.name}
         </strong>{" "}
         a proficient full stack developer with a robust skill set spanning both
         front-end and back-end technologies. With a passion for building
-        dynamic, responsive, and user-friendly web applications, {profile?.user?.name} excels in
+        dynamic, responsive, and user-friendly web applications, {profile?.name} excels in
         crafting seamless digital experiences.
       </p>
 
@@ -57,7 +61,7 @@ function About() {
       </p>
 
       <p className="mt-4">
-        {profile?.user?.name} is dedicated to leveraging his expertise to contribute to
+        {profile?.name} is dedicated to leveraging his expertise to contribute to
         innovative projects and drive technological advancements. Whether
         working on front-end interfaces or back-end logic, he is passionate
         about delivering exceptional digital solutions that meet user needs and
@@ -68,11 +72,11 @@ function About() {
         Personal Interests and Inspiration:
       </h2>
       <p>
-        Beyond his professional achievements, {profile?.user?.name} is a big fan of cricket and
+        Beyond his professional achievements, {profile?.name} is a big fan of cricket and
         holds immense admiration for <strong> King Kohli.</strong> His favorite
         person and biggest inspiration is his twin brother,{" "}
         <strong>Ankush.</strong> Their friendly rivalry and deep bond have
-        significantly shaped {profile?.user?.name}’s journey. Ankush is not only a great
+        significantly shaped {profile?.name}’s journey. Ankush is not only a great
         competitor but also a steadfast friend, constantly motivating him to
         strive for excellence.
       </p>

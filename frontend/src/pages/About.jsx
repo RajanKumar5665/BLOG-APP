@@ -2,7 +2,7 @@ import React from "react";
 import { useAuth } from "../context/AuthProvider";
 
 function About() {
-  const { profile, loading } = useAuth(); // ✅ get loading
+  const { profile, loading } = useAuth(); 
 
   if (loading) {
     return <p className="text-center mt-10 text-lg font-medium">Loading profile...</p>;

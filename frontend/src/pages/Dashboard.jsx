@@ -11,19 +11,19 @@ function Dashboard() {
   const { isAuthenticated } = useAuth();
   const [component, setComponent] = useState("My Blogs");
 
-  // Redirect to home if not authenticated
+  
   if (!isAuthenticated) {
     return <Navigate to="/" />;
   }
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-      {/* Sidebar */}
+      
       <div className="w-64">
         <Sidebar component={component} setComponent={setComponent} />
       </div>
 
-      {/* Main Content */}
+    
       <div className="flex-1 p-4 sm:ml-64">
         {component === "My Profile" ? (
           <MyProfile />

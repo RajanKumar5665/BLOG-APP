@@ -19,7 +19,7 @@ function Blogs() {
         {blogs && blogs.length > 0 ? (
           blogs.map((blog) => (
             <Link
-              to={`/blog/${blog._id}`}  // ✅ FIXED HERE
+              to={`/blog/${blog._id}`}  
               key={blog._id}
               className="relative rounded-lg overflow-hidden shadow-md hover:shadow-lg transform hover:scale-105 transition-transform duration-300"
             >

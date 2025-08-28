@@ -13,12 +13,11 @@ const app = express();
 const port = process.env.PORT || 5000;
 const MONGODB_URI = process.env.MONGODB_URI;
 
-// ✅ Load frontend URLs from .env
-// ✅ Load frontend URLs from .env safely
+
 const allowedOrigins = (process.env.FRONTEND_URLS || "").split(",");
 
 
-// ✅ CORS Middleware
+
 app.use(
   cors({
     origin: function (origin, callback) {
@@ -33,7 +32,6 @@ app.use(
   })
 );
 
-// Middleware
 app.use(express.json());
 app.use(cookieParser());
 app.use(
@@ -43,39 +41,38 @@ app.use(
   })
 );
 
-// Cloudinary config
+
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.CLOUD_API_KEY,
   api_secret: process.env.CLOUD_SECRET_KEY,
 });
 
-// ✅ Root route
 app.get("/", (req, res) => {
-  res.send("🚀 Blog API is running");
+  res.send("Blog API is running");
 });
 
-// Routes
+
 app.use("/api/users", userRoute);
 app.use("/api/blogs", blogRoute);
 
-// ✅ Global error handler
+
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ success: false, message: err.message || "Server Error" });
 });
 
-// Connect to DB and start server
+
 async function connectDB() {
   try {
     await mongoose.connect(MONGODB_URI);
-    console.log("✅ Connected to MongoDB");
+    console.log("Connected to MongoDB");
 
     app.listen(port, () => {
-      console.log(`🚀 Server running on port ${port}`);
+      console.log(`Server running on port ${port}`);
     });
   } catch (err) {
-    console.error("❌ MongoDB connection failed:", err);
+    console.error("MongoDB connection failed:", err);
     process.exit(1);
   }
 }

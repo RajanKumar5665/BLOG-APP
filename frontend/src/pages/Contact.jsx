@@ -26,7 +26,7 @@ function Contact() {
       setLoading(true);
       await axios.post("https://api.web3forms.com/submit", userInfo);
       toast.success("Message sent successfully ✅");
-      reset(); // clear the form after success
+      reset();
     } catch (error) {
       toast.error("❌ An error occurred");
     } finally {
@@ -38,13 +38,13 @@ function Contact() {
     <div>
       <div className="bg-gray-50 min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl w-full space-y-8 bg-white p-10 rounded-lg shadow-lg">
-          {/* Header */}
+        
           <div className="text-center">
             <h2 className="text-3xl font-extrabold text-gray-900">Contact Us</h2>
           </div>
 
           <div className="flex flex-col md:flex-row justify-between">
-            {/* Contact Form */}
+          
             <div className="w-full md:w-1/2 mb-8 md:mb-0 md:pr-4">
               <h3 className="text-lg font-medium text-gray-700 mb-4">
                 Send us a message
@@ -54,7 +54,7 @@ function Contact() {
                 className="space-y-4"
                 noValidate
               >
-                {/* Name */}
+             
                 <div>
                   <input
                     type="text"
@@ -69,7 +69,6 @@ function Contact() {
                   )}
                 </div>
 
-                {/* Email */}
                 <div>
                   <input
                     type="email"
@@ -90,7 +89,6 @@ function Contact() {
                   )}
                 </div>
 
-                {/* Message */}
                 <div>
                   <textarea
                     placeholder="Your Message"
@@ -105,7 +103,7 @@ function Contact() {
                   )}
                 </div>
 
-                {/* Submit */}
+           
                 <div>
                   <button
                     type="submit"
@@ -118,7 +116,7 @@ function Contact() {
               </form>
             </div>
 
-            {/* Contact Info */}
+     
             <div className="w-full md:w-1/2 md:pl-4">
               <h3 className="text-lg font-medium text-gray-700 mb-4">
                 Contact Information
@@ -126,15 +124,15 @@ function Contact() {
               <ul className="space-y-4">
                 <li className="flex items-center space-x-2">
                   <FaPhone className="text-red-500" />
-                  <span>+91 9876543210</span>
+                  <span>+91 9693153290</span>
                 </li>
                 <li className="flex items-center space-x-2">
                   <FaEnvelope className="text-pink-500" />
-                  <span>help@learncoding.com</span>
+                  <span>rk4009023@gmail.com</span>
                 </li>
                 <li className="flex items-center space-x-2">
                   <FaMapMarkerAlt className="text-green-500" />
-                  <span>Delhi, NCR, India</span>
+                  <span>WestBengal, Kolkata, India</span>
                 </li>
               </ul>
             </div>

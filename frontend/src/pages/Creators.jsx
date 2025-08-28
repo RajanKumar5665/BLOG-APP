@@ -42,14 +42,14 @@ function Creators() {
               key={creator._id}
               className="bg-white shadow-lg rounded-lg overflow-hidden max-w-xs w-full m-4 transform hover:scale-105 transition duration-300"
             >
-              {/* Cover Image */}
+          
               <div className="relative">
                 <img
                   src={creator?.photo?.url || "/default-cover.jpg"}
                   alt={`${creator?.name || "Creator"} cover`}
                   className="w-full h-32 object-cover"
                 />
-                {/* Profile Avatar */}
+            
                 <div className="absolute inset-x-0 bottom-0 transform translate-y-1/2">
                   <img
                     src={creator?.photo?.url || "/default-avatar.jpg"}
@@ -58,8 +58,7 @@ function Creators() {
                   />
                 </div>
               </div>
-
-              {/* Info */}
+  
               <div className="px-4 py-6 mt-6">
                 <h2 className="text-center text-xl font-semibold text-gray-800">
                   {creator?.name}

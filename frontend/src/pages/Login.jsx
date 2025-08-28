@@ -37,7 +37,7 @@ function Login() {
       localStorage.setItem("jwt", data.token);
       toast.success(data.message || "User Logged in successfully");
 
-      // ✅ Set only user details in profile
+    
       setProfile(data.user);
       setIsAuthenticated(true);
 

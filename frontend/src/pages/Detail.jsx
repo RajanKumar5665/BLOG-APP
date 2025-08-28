@@ -20,7 +20,7 @@ function Detail() {
           }
         );
 
-        // ✅ Make sure you store the actual blog object
+       
         setBlog(data.blog || data); 
       } catch (error) {
         console.error(error);
@@ -47,7 +47,7 @@ function Detail() {
         </div>
         <h1 className="text-4xl font-bold mb-6">{blog.title}</h1>
 
-        {/* Author Info */}
+        
         <div className="flex items-center mb-6">
           {blog.adminPhoto && (
             <img
@@ -59,7 +59,7 @@ function Detail() {
           <p className="text-lg font-semibold">{blog.adminName}</p>
         </div>
 
-        {/* Blog Image and Content */}
+       
         <div className="flex flex-col md:flex-row">
           {blog.blogImage?.url && (
             <img

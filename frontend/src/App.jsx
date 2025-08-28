@@ -15,7 +15,7 @@ import { Toaster } from "react-hot-toast";
 import UpdateBlog from "./dashboard/UpdateBlog";
 import Detail from "./pages/Detail";
 import NotFound from "./pages/NotFound";
-import { BACKEND_URL } from './utils.js'; // Keep this if you plan to use it
+import { BACKEND_URL } from './utils.js'; 
 
 function App() {
   const location = useLocation();
@@ -44,13 +44,11 @@ function App() {
         <Route exact path="/register" element={<Register />} />
         <Route exact path="/dashboard" element={<Dashboard />} />
 
-        {/* Blog Detail Page */}
         <Route exact path="/blog/:id" element={<Detail />} />
 
-        {/* Update Blog Page */}
         <Route exact path="/blog/update/:id" element={<UpdateBlog />} />
 
-        {/* Not Found */}
+      
         <Route path="*" element={<NotFound />} />
       </Routes>
       {!hideNavbarFooter && <Footer />}

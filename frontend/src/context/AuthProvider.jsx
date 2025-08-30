@@ -4,52 +4,54 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [blogs, setBlogs] = useState();
-  const [profile, setProfile] = useState();
+  const [blogs, setBlogs] = useState([]);
+  const [profile, setProfile] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true); // ✅ Added loading state
+  const [loading, setLoading] = useState(true);
+
+  //  axios instance
+  const api = axios.create({
+    baseURL: "http://localhost:3000/api", 
+    withCredentials: true,
+  });
+
+  
+  api.interceptors.request.use((config) => {
+    const token = localStorage.getItem("jwt"); 
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  });
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        let token = localStorage.getItem("jwt");
-        console.log(token);
-        if (token) {
-          const { data } = await axios.get(
-            "http://localhost:3000/api/users/my-profile",
-            {
-              withCredentials: true,
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
-          console.log(data.user);
-          setProfile(data.user);
-          setIsAuthenticated(true);
-        }
+        const { data } = await api.get("/users/my-profile");
+        console.log("Profile:", data.user);
+        setProfile(data.user);
+        setIsAuthenticated(true);
       } catch (error) {
-        console.log(error);
+        console.log("Profile fetch error:", error.response?.data || error);
+        setIsAuthenticated(false);
+        setProfile(null);
       } finally {
-        setLoading(false); // ✅ Stop loading after fetch (success or error)
+        setLoading(false);
       }
     };
 
     const fetchBlogs = async () => {
       try {
-        const { data } = await axios.get(
-          "http://localhost:3000/api/blogs/all-blogs",
-          { withCredentials: true }
-        );
-        console.log(data);
-        setBlogs(data);
+        const { data } = await api.get("/blogs/all-blogs");
+        console.log("Blogs:", data);
+        setBlogs(data.blogs || data); // agar backend { blogs: [...] } bhejta hai
       } catch (error) {
-        console.log(error);
+        console.log("Blogs fetch error:", error.response?.data || error);
       }
     };
 
-    fetchBlogs();
     fetchProfile();
+    fetchBlogs();
   }, []);
 
   return (
@@ -60,7 +62,7 @@ export const AuthProvider = ({ children }) => {
         setProfile,
         isAuthenticated,
         setIsAuthenticated,
-        loading, 
+        loading,
       }}
     >
       {children}

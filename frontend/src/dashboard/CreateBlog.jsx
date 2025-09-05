@@ -30,7 +30,7 @@ function CreateBlog() {
 
     try {
       const { data } = await axios.post(
-        "https://blog-app-8-ubur.onrender.com/api/blogs/create",
+        "https://blog-app-vym8.onrender.com/api/blogs/create",
         formData,
         {
           withCredentials: true,

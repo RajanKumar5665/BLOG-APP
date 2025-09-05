@@ -24,7 +24,7 @@ function Login() {
     try {
       setLoading(true);
       const { data } = await axios.post(
-        "https://blog-app-8-ubur.onrender.com/api/users/login",
+        "https://blog-app-vym8.onrender.com/api/users/login",
         { email, password, role },
         {
           withCredentials: true,

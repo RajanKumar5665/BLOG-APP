@@ -64,7 +64,7 @@ function UpdateBlog() {
     try {
       setLoading(true);
       const { data } = await axios.put(
-        `https://blog-app-8-ubur.onrender.com/api/blogs/update/${id}`,
+        `https://blog-app-vym8.onrender.com/api/blogs/update/${id}`,
         formData,
         {
           withCredentials: true,

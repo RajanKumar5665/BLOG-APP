@@ -11,7 +11,7 @@ function Navbar() {
   const { profile, isAuthenticated, setIsAuthenticated } = useAuth();
   const navigateTo = useNavigate();
 
-  const backendURL = import.meta.env.VITE_BACKEND_URL || "https://blog-app-8-ubur.onrender.com";
+  const backendURL = import.meta.env.VITE_BACKEND_URL || "https://blog-app-vym8.onrender.com";
 
   const handleLogout = async (e) => {
     e.preventDefault();

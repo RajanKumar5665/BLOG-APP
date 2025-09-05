@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
 
   //  axios instance
   const api = axios.create({
-    baseURL: "https://blog-app-8-ubur.onrender.com/api", 
+    baseURL: "https://blog-app-vym8.onrender.com/api", 
     withCredentials: true,
   });
 

@@ -19,7 +19,7 @@ const __dirname = path.resolve();
 
 
 const allowedOrigins = [
-  "https://blog-app-chi-rosy-95.vercel.app"
+  "https://blog-app-vym8.onrender.com"
 ]
 
 

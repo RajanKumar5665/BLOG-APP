@@ -24,7 +24,7 @@ function MyBlogs() {
   const handleDelete = async (id) => {
     try {
       const res = await axios.delete(
-        `https://blog-app-8-ubur.onrender.com/api/blogs/delete/${id}`,
+        `https://blog-app-vym8.onrender.com/api/blogs/delete/${id}`,
         { withCredentials: true }
       );
       toast.success(res.data.message || "Blog deleted successfully");

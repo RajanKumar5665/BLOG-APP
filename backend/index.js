@@ -1,17 +1,21 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import fileUpload from "express-fileupload";
+import fileUpload from 'express-fileupload';
 import { v2 as cloudinary } from "cloudinary";
+
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import userRoute from "./routes/user.route.js";
 import blogRoute from "./routes/blog.route.js";
+import path from 'path';
 
 dotenv.config();
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 const MONGODB_URI = process.env.MONGODB_URI;
+
+const __dirname = path.resolve();
 
 
 const allowedOrigins = [
@@ -45,6 +49,12 @@ app.use("/api/blogs", blogRoute);
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ success: false, message: err.message || "Server Error" });
+});
+
+app.use(express.static(path.join(__dirname, '/frontend/dist')));
+
+app.get('/*', (_, res) => {
+  res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
 });
 
 

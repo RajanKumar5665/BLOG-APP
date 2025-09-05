@@ -15,7 +15,7 @@ import { Toaster } from "react-hot-toast";
 import UpdateBlog from "./dashboard/UpdateBlog";
 import Detail from "./pages/Detail";
 import NotFound from "./pages/NotFound";
-import { BACKEND_URL } from './utils.js'; 
+
 
 function App() {
   const location = useLocation();

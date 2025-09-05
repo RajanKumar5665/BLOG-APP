@@ -1,1 +1,0 @@
-export const BACKEND_URL = "https://blog-app-8-ubur.onrender.com,http://localhost:3000";

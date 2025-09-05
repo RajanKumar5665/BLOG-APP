@@ -17,7 +17,7 @@ function Sidebar({ setComponent }) {
   const handleLogout = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.get("http://localhost:3000/api/users/logout", {
+      const { data } = await axios.get("https://blog-app-8-ubur.onrender.com/api/users/logout", {
         withCredentials: true,
       });
       toast.success(data.message);

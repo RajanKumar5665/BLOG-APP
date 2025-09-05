@@ -14,32 +14,20 @@ const port = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI;
 
 
-const allowedOrigins = (process.env.FRONTEND_URLS || "").split(",");
+const allowedOrigins = [
+  "https://blog-app-chi-rosy-95.vercel.app"
+]
 
 
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("CORS not allowed from this origin: " + origin));
-      }
-    },
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
-  })
-);
+
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(
-  fileUpload({
-    useTempFiles: true,
-    tempFileDir: "/tmp/",
-  })
-);
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true,
+}));
 
 
 cloudinary.config({
@@ -48,9 +36,6 @@ cloudinary.config({
   api_secret: process.env.CLOUD_SECRET_KEY,
 });
 
-app.get("/", (req, res) => {
-  res.send("Blog API is running");
-});
 
 
 app.use("/api/users", userRoute);

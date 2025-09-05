@@ -20,7 +20,7 @@ function UpdateBlog() {
     const fetchBlog = async () => {
       try {
         const { data } = await axios.get(
-          `http://localhost:3000/api/blogs/single-blog/${id}`,
+          `https://blog-app-8-ubur.onrender.com/api/blogs/single-blog/${id}`,
           { withCredentials: true }
         );
         setTitle(data?.title || "");
@@ -64,7 +64,7 @@ function UpdateBlog() {
     try {
       setLoading(true);
       const { data } = await axios.put(
-        `http://localhost:3000/api/blogs/update/${id}`,
+        `https://blog-app-8-ubur.onrender.com/api/blogs/update/${id}`,
         formData,
         {
           withCredentials: true,

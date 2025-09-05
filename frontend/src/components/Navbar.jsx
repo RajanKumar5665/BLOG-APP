@@ -11,10 +11,12 @@ function Navbar() {
   const { profile, isAuthenticated, setIsAuthenticated } = useAuth();
   const navigateTo = useNavigate();
 
+  const backendURL = import.meta.env.VITE_BACKEND_URL || "https://blog-app-8-ubur.onrender.com";
+
   const handleLogout = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.get("http://localhost:3000/api/users/logout", {
+      const { data } = await axios.get(`${backendURL}/api/users/logout`, {
         withCredentials: true,
       });
       localStorage.removeItem("jwt");

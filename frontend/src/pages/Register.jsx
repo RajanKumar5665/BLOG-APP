@@ -46,7 +46,7 @@ function Register() {
 
     try {
       const { data } = await axios.post(
-        "http://localhost:3000/api/users/register",
+        "https://blog-app-8-ubur.onrender.com/api/users/register",
         formData,
         {
           withCredentials: true,

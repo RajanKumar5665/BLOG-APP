@@ -22,6 +22,7 @@ app.use(cookieParser());
 
 app.use(cors({
   origin: [
+    'https://blog-app-five-lemon.vercel.app',
     'https://blog-app-git-main-rajan-mandals-projects.vercel.app',
     'http://localhost:5173',
     'http://localhost:5174'

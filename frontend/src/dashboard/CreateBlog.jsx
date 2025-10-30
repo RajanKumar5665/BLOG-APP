@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
+import api, { endpoints } from "../services/api";
 
 function CreateBlog() {
   const [title, setTitle] = useState("");
@@ -8,6 +9,7 @@ function CreateBlog() {
   const [about, setAbout] = useState("");
   const [blogImage, setBlogImage] = useState("");
   const [blogImagePreview, setBlogImagePreview] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const changePhotoHandler = (e) => {
     const file = e.target.files[0];
@@ -22,6 +24,17 @@ function CreateBlog() {
 
   const handleCreateBlog = async (e) => {
     e.preventDefault();
+    
+    if (!title || !category || !about || !blogImage) {
+      toast.error("Please fill all required fields");
+      return;
+    }
+
+    if (about.length < 200) {
+      toast.error("About section must be at least 200 characters");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("title", title);
     formData.append("category", category);
@@ -29,12 +42,16 @@ function CreateBlog() {
     formData.append("blogImage", blogImage);
 
     try {
+      setLoading(true);
       const { data } = await axios.post(
-        "https://blog-app-vym8.onrender.com/api/blogs/create",
+        `${api.defaults.baseURL}${endpoints.createBlog}`,
         formData,
         {
           withCredentials: true,
-          headers: { "Content-Type": "multipart/form-data" },
+          headers: { 
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+          },
         }
       );
       toast.success(data.message || "Blog created successfully!");
@@ -44,7 +61,10 @@ function CreateBlog() {
       setBlogImage("");
       setBlogImagePreview("");
     } catch (error) {
-      toast.error(error.message || "Please fill all required fields");
+      console.error("Create blog error:", error);
+      toast.error(error.response?.data?.message || "Failed to create blog");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -52,7 +72,7 @@ function CreateBlog() {
     <div className="min-h-screen py-12 bg-gray-50">
       <div className="max-w-4xl mx-auto p-8 bg-white border rounded-2xl shadow-xl">
         <h3 className="text-3xl font-extrabold mb-8 text-center text-gray-800">
-          ✍️ Create a New <span className="text-blue-600">Blog</span>
+          Create a New <span className="text-blue-600">Blog</span>
         </h3>
         <form onSubmit={handleCreateBlog} className="space-y-6">
           {/* Category */}
@@ -121,12 +141,12 @@ function CreateBlog() {
             ></textarea>
           </div>
 
-          {/* Button */}
           <button
             type="submit"
-            className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold rounded-lg transition-colors duration-200"
+            disabled={loading}
+            className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white text-lg font-semibold rounded-lg transition-colors duration-200"
           >
-            🚀 Post Blog
+            {loading ? "Creating..." : "Post Blog"}
           </button>
         </form>
       </div>

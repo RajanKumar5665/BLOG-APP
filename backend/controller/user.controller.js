@@ -5,41 +5,44 @@ import createTokenAndSaveCookies from "../jwt/AuthToken.js";
 
 export const register = async (req, res) => {
   try {
-    if (!req.files || Object.keys(req.files).length === 0) {
-      return res.status(400).json({ message: "User photo is required" });
-    }
-    const { photo } = req.files;
-    const allowedFormats = ["image/jpeg", "image/png", "image/webp"];
-    if (!allowedFormats.includes(photo.mimetype)) {
-      return res.status(400).json({
-        message: "Invalid photo format. Only jpg and png are allowed",
-      });
-    }
     const { email, name, password, phone, education, role } = req.body;
-    if (
-      !email ||
-      !name ||
-      !password ||
-      !phone ||
-      !education ||
-      !role ||
-      !photo
-    ) {
+    
+    if (!email || !name || !password || !phone || !education || !role) {
       return res.status(400).json({ message: "Please fill required fields" });
     }
+
     const user = await User.findOne({ email });
     if (user) {
-      return res
-        .status(400)
-        .json({ message: "User already exists with this email" });
+      return res.status(400).json({ message: "User already exists with this email" });
     }
-    const cloudinaryResponse = await cloudinary.uploader.upload(
-      photo.tempFilePath
-    );
-    if (!cloudinaryResponse || cloudinaryResponse.error) {
-      console.log(cloudinaryResponse.error);
+
+    let photoData = null;
+    
+    if (req.files && req.files.photo) {
+      const { photo } = req.files;
+      const allowedFormats = ["image/jpeg", "image/png", "image/webp"];
+      
+      if (!allowedFormats.includes(photo.mimetype)) {
+        return res.status(400).json({
+          message: "Invalid photo format. Only jpg, png and webp are allowed",
+        });
+      }
+
+      const cloudinaryResponse = await cloudinary.uploader.upload(photo.tempFilePath);
+      
+      if (!cloudinaryResponse || cloudinaryResponse.error) {
+        console.log(cloudinaryResponse.error);
+        return res.status(500).json({ message: "Failed to upload image" });
+      }
+
+      photoData = {
+        public_id: cloudinaryResponse.public_id,
+        url: cloudinaryResponse.url,
+      };
     }
+
     const hashedPassword = await bcrypt.hash(password, 10);
+    
     const newUser = new User({
       email,
       name,
@@ -47,15 +50,13 @@ export const register = async (req, res) => {
       phone,
       education,
       role,
-      photo: {
-        public_id: cloudinaryResponse.public_id,
-        url: cloudinaryResponse.url,
-      },
+      ...(photoData && { photo: photoData }),
     });
+    
     await newUser.save();
+
     if (newUser) {
       let token = await createTokenAndSaveCookies(newUser._id, res);
-      console.log("Singup: ", token);
       res.status(201).json({
         message: "User registered successfully",
         user: {
@@ -64,7 +65,7 @@ export const register = async (req, res) => {
           email: newUser.email,
           role: newUser.role,
           education: newUser.education,
-          avatar: newUser.avatar,
+          photo: newUser.photo,
           createdOn: newUser.createdOn,
         },
         token: token,
@@ -83,18 +84,24 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Please fill required fields" });
     }
     const user = await User.findOne({ email }).select("+password");
-    console.log(user);
+    
+    if (!user) {
+      return res.status(400).json({ message: "Invalid email or password" });
+    }
+    
     if (!user.password) {
       return res.status(400).json({ message: "User password is missing" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!user || !isMatch) {
+    if (!isMatch) {
       return res.status(400).json({ message: "Invalid email or password" });
     }
+    
     if (user.role !== role) {
       return res.status(400).json({ message: `Given role ${role} not found` });
     }
+    
     let token = await createTokenAndSaveCookies(user._id, res);
     console.log("Login: ", token);
     res.status(200).json({
@@ -124,7 +131,7 @@ export const logout = (req, res) => {
 };
 
 export const getMyProfile = async (req, res) => {
-  const user = await req.user;
+  const user = req.user;
   res.status(200).json({ user });
 };
 

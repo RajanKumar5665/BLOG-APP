@@ -3,29 +3,26 @@ import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineMenu } from "react-icons/ai";
 import { IoCloseSharp } from "react-icons/io5";
 import { useAuth } from "../context/AuthProvider";
-import axios from "axios";
 import toast from "react-hot-toast";
+import api, { endpoints } from "../services/api";
 
 function Navbar() {
   const [show, setShow] = useState(false);
-  const { profile, isAuthenticated, setIsAuthenticated } = useAuth();
+  const { profile, isAuthenticated, setIsAuthenticated, setProfile } = useAuth();
   const navigateTo = useNavigate();
-
-  const backendURL = import.meta.env.VITE_BACKEND_URL || "https://blog-app-vym8.onrender.com";
 
   const handleLogout = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.get(`${backendURL}/api/users/logout`, {
-        withCredentials: true,
-      });
+      const { data } = await api.get(endpoints.logout);
       localStorage.removeItem("jwt");
       toast.success(data.message);
       setIsAuthenticated(false);
+      setProfile(null);
       navigateTo("/login");
     } catch (error) {
-      console.log(error);
-      toast.error("Failed to logout");
+      console.error("Logout error:", error);
+      toast.error(error.response?.data?.message || "Failed to logout");
     }
   };
 
@@ -81,9 +78,9 @@ function Navbar() {
               )}
 
               {/* ✅ Profile image */}
-              {profile?.avatar && (
+              {profile?.photo?.url && (
                 <img
-                  src={profile.avatar}
+                  src={profile.photo.url}
                   alt="Profile"
                   className="w-10 h-10 rounded-full object-cover border"
                 />

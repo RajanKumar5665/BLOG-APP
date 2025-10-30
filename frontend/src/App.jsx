@@ -31,24 +31,24 @@ function App() {
       <Toaster position="top-center" reverseOrder={false} />
       {!hideNavbarFooter && <Navbar />}
       <Routes>
-        <Route
-          exact
-          path="/"
-          element={token ? <Home /> : <Navigate to="/login" />}
-        />
+        <Route exact path="/" element={<Home />} />
         <Route exact path="/blogs" element={<Blogs />} />
         <Route exact path="/about" element={<About />} />
         <Route exact path="/contact" element={<Contact />} />
         <Route exact path="/creators" element={<Creators />} />
         <Route exact path="/login" element={<Login />} />
         <Route exact path="/register" element={<Register />} />
-        <Route exact path="/dashboard" element={<Dashboard />} />
-
+        <Route 
+          exact 
+          path="/dashboard" 
+          element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} 
+        />
         <Route exact path="/blog/:id" element={<Detail />} />
-
-        <Route exact path="/blog/update/:id" element={<UpdateBlog />} />
-
-      
+        <Route 
+          exact 
+          path="/blog/update/:id" 
+          element={isAuthenticated ? <UpdateBlog /> : <Navigate to="/login" />} 
+        />
         <Route path="*" element={<NotFound />} />
       </Routes>
       {!hideNavbarFooter && <Footer />}

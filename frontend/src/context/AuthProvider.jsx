@@ -1,5 +1,5 @@
-import axios from "axios";
 import React, { createContext, useContext, useEffect, useState } from "react";
+import api, { endpoints } from "../services/api";
 
 export const AuthContext = createContext();
 
@@ -9,32 +9,23 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  //  axios instance
-  const api = axios.create({
-    baseURL: "https://blog-app-vym8.onrender.com/api", 
-    withCredentials: true,
-  });
-
-  
-  api.interceptors.request.use((config) => {
-    const token = localStorage.getItem("jwt"); 
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  });
-
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const { data } = await api.get("/users/my-profile");
-        console.log("Profile:", data.user);
+        const token = localStorage.getItem("jwt");
+        if (!token) {
+          setLoading(false);
+          return;
+        }
+
+        const { data } = await api.get(endpoints.myProfile);
         setProfile(data.user);
         setIsAuthenticated(true);
       } catch (error) {
-        console.log("Profile fetch error:", error.response?.data || error);
+        console.error("Profile fetch error:", error.response?.data?.message || error.message);
         setIsAuthenticated(false);
         setProfile(null);
+        localStorage.removeItem("jwt");
       } finally {
         setLoading(false);
       }
@@ -42,11 +33,11 @@ export const AuthProvider = ({ children }) => {
 
     const fetchBlogs = async () => {
       try {
-        const { data } = await api.get("/blogs/all-blogs");
-        console.log("Blogs:", data);
-        setBlogs(data.blogs || data); // agar backend { blogs: [...] } bhejta hai
+        const { data } = await api.get(endpoints.allBlogs);
+        setBlogs(Array.isArray(data) ? data : []);
       } catch (error) {
-        console.log("Blogs fetch error:", error.response?.data || error);
+        console.error("Blogs fetch error:", error.response?.data?.message || error.message);
+        setBlogs([]);
       }
     };
 
@@ -58,6 +49,7 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         blogs,
+        setBlogs,
         profile,
         setProfile,
         isAuthenticated,
@@ -70,4 +62,10 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within AuthProvider");
+  }
+  return context;
+};

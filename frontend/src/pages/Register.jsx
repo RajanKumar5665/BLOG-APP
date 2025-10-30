@@ -3,10 +3,11 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
+import api, { endpoints } from "../services/api";
 
 function Register() {
   const { setIsAuthenticated, setProfile } = useAuth();
-  const navigateTo = useNavigate();
+  const navigate = useNavigate();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -29,9 +30,11 @@ function Register() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     if (!name || !email || !phone || !password || !role || !education) {
       toast.error("Please fill all required fields!");
+      setLoading(false);
       return;
     }
 
@@ -42,26 +45,28 @@ function Register() {
     formData.append("password", password);
     formData.append("role", role);
     formData.append("education", education);
-    if (photo) formData.append("photo", photo);
+    if (photo) {
+      formData.append("photo", photo);
+    }
 
     try {
       const { data } = await axios.post(
-        "https://blog-app-vym8.onrender.com/api/users/register",
+        `${api.defaults.baseURL}${endpoints.register}`,
         formData,
         {
           withCredentials: true,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+          headers: { "Content-Type": "multipart/form-data" },
         }
       );
 
       localStorage.setItem("jwt", data.token);
-      toast.success(data.message || "User registered successfully");
       setProfile(data.user);
       setIsAuthenticated(true);
-      navigateTo("/");
+
+      toast.success(data.message || "Registered successfully!");
+      navigate("/");
     } catch (error) {
+      console.error("Registration error:", error);
       toast.error(error.response?.data?.message || "Registration failed!");
     } finally {
       setLoading(false);
@@ -149,12 +154,17 @@ function Register() {
                 </div>
               )}
             </div>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={changePhotoHandler}
-              className="w-full bg-gray-700 text-white border border-gray-600 rounded p-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400"
-            />
+            <div className="flex-1">
+              <label className="text-gray-300 text-sm mb-1 block">
+                Profile Photo (Optional)
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={changePhotoHandler}
+                className="w-full bg-gray-700 text-white border border-gray-600 rounded p-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400"
+              />
+            </div>
           </div>
 
           <p className="text-center text-gray-400 text-sm">

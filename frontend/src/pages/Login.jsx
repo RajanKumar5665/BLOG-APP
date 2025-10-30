@@ -1,8 +1,8 @@
-import axios from "axios";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
+import api, { endpoints } from "../services/api";
 
 function Login() {
   const { setIsAuthenticated, setProfile } = useAuth();
@@ -23,21 +23,15 @@ function Login() {
 
     try {
       setLoading(true);
-      const { data } = await axios.post(
-        "https://blog-app-vym8.onrender.com/api/users/login",
-        { email, password, role },
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const { data } = await api.post(endpoints.login, { 
+        email, 
+        password, 
+        role 
+      });
 
       localStorage.setItem("jwt", data.token);
       toast.success(data.message || "User Logged in successfully");
 
-    
       setProfile(data.user);
       setIsAuthenticated(true);
 
@@ -47,7 +41,7 @@ function Login() {
 
       navigateTo("/");
     } catch (error) {
-      console.error(error);
+      console.error("Login error:", error);
       toast.error(
         error.response?.data?.message || "Invalid credentials or server error"
       );

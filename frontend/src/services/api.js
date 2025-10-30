@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-// API Base URL Configuration
-export const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://blog-app-vym8.onrender.com/api';
+export const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://blog-app-fat2.onrender.com/api';
 
 // Create axios instance with default config
 export const api = axios.create({

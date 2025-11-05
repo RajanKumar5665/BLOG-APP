@@ -21,7 +21,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use(cors({
-  origin: process.env.FRONTEND_URL || '*',
+  origin: [
+    'https://blog-app-4mcq.onrender.com',
+    'http://localhost:5173', // Keep for local development
+  ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));
@@ -37,15 +40,30 @@ cloudinary.config({
   api_secret: process.env.CLOUD_SECRET_KEY,
 });
 
-
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ 
+    success: true,
+    message: 'Server is running',
+  });
+});
 
 app.use("/api/users", userRoute);
 app.use("/api/blogs", blogRoute);
 
-app.use(express.static(path.join(__dirname, 'frontend', 'dist')));
+// Serve static files from frontend/dist
+app.use(express.static(path.join(__dirname, '..', 'frontend', 'dist')));
 
-app.get("*", (_, res) => {
-  res.sendFile(path.join(__dirname, 'frontend', 'dist', 'index.html'));
+// Serve index.html for all non-api routes (SPA routing)
+app.get('*', (req, res) => {
+  // Only serve index.html for non-API routes
+  if (!req.path.startsWith('/api')) {
+    res.sendFile(path.join(__dirname, '..', 'frontend', 'dist', 'index.html'));
+  } else {
+    res.status(404).json({ 
+      success: false, 
+      message: 'Route not found' 
+    });
+  }
 });
 
 app.use((err, req, res, next) => {

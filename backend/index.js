@@ -50,14 +50,11 @@ app.get('/api/health', (req, res) => {
 app.use("/api/users", userRoute);
 app.use("/api/blogs", blogRoute);
 
-// Serve static files from frontend/dist
-app.use(express.static(path.join(__dirname, '..', 'frontend', 'dist')));
+app.use(express.static(path.join(__dirname, 'frontend', 'dist')));
 
-// Serve index.html for all non-api routes (SPA routing)
 app.get('*', (req, res) => {
-  // Only serve index.html for non-API routes
   if (!req.path.startsWith('/api')) {
-    res.sendFile(path.join(__dirname, '..', 'frontend', 'dist', 'index.html'));
+    res.sendFile(path.join(__dirname, 'frontend', 'dist', 'index.html'));
   } else {
     res.status(404).json({ 
       success: false, 

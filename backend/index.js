@@ -22,10 +22,7 @@ app.use(cookieParser());
 
 app.use(cors({
   origin: [
-    'https://blog-app-five-lemon.vercel.app',
-    'https://blog-app-git-main-rajan-mandals-projects.vercel.app',
-    'http://localhost:5173',
-    'http://localhost:5174'
+    
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
@@ -42,15 +39,16 @@ cloudinary.config({
   api_secret: process.env.CLOUD_SECRET_KEY,
 });
 
-app.get('/api/health', (req, res) => {
-  res.status(200).json({ 
-    success: true,
-    message: 'Server is running',
-  });
-});
+
 
 app.use("/api/users", userRoute);
 app.use("/api/blogs", blogRoute);
+
+app.use(express.static(path.join(__dirname, 'frontend', 'dist')));
+
+app.get("*",(_, res) => {
+    res.sendFile(path.join(__dirname, 'frontend', 'dist', 'index.html'));
+});
 
 
 

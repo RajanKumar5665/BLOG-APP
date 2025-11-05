@@ -21,9 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use(cors({
-  origin: [
-    
-  ],
+  origin: process.env.FRONTEND_URL || '*',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }));
@@ -46,17 +44,8 @@ app.use("/api/blogs", blogRoute);
 
 app.use(express.static(path.join(__dirname, 'frontend', 'dist')));
 
-app.get("*",(_, res) => {
-    res.sendFile(path.join(__dirname, 'frontend', 'dist', 'index.html'));
-});
-
-
-
-app.use((req, res) => {
-  res.status(404).json({ 
-    success: false, 
-    message: 'Route not found' 
-  });
+app.get("*", (_, res) => {
+  res.sendFile(path.join(__dirname, 'frontend', 'dist', 'index.html'));
 });
 
 app.use((err, req, res, next) => {
